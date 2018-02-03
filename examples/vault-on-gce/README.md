@@ -102,14 +102,13 @@ rm terraform.tfstate*
 
 ### NOTE: Terraform.tfstate contains sensitive information
 
-
 ---------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------
-After a few minutes, the Vault instance will be ready.
+After Terraform does its job, the Vault instance will be ready to go.
 
-## SSH Into Vault Instnace
+## SSH Into Vault Instance
 
-Use SSH to connect to the Vault instance:
+Use SSH to connect to the Vault instance (from GCLOUD Cloud Shell):
 
 ```
 gcloud compute ssh $(gcloud compute instances list --limit=1 --filter=name~vault- --uri) -- sudo bash
