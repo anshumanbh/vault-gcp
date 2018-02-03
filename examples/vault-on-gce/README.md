@@ -29,7 +29,7 @@ Setting up google project
 ```
 gcloud config set project <project_id>
 export GOOGLE_PROJECT=$(gcloud config get-value project)
-git clone https://github.com/anshumanbh/terraform-google-vault.git
+git clone https://github.com/anshumanbh/vault-gcp.git
 cd terraform-google-vault/examples/vault-on-gce
 ```
 
