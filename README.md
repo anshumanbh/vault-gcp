@@ -59,6 +59,11 @@ module "vault" {
 - [`google_storage_bucket.vault-assets`](https://www.terraform.io/docs/providers/google/r/storage_bucket.html): The Cloud Storage bucket for Vault unseal key and TLS certificate storage.
 - [`google_service_account.vault-admin`](https://www.terraform.io/docs/providers/google/r/google_service_account.html): The service account for the Vault instance.
 - [`google_project_iam_policy.vault`](https://www.terraform.io/docs/providers/google/r/google_project_iam_policy.html): The IAM policy bindings for the Vault service account.
+  - storage.admin
+  - iam.ServiceAccountActor
+  - iam.ServiceAccountKeyAdmin
+  - cloudkms.cryptokeyencrypterdecrypter
+  - logging.logwriter
 - Service Account "vault-admin" key (encrypted and uploaded to GCS)
 - Root CA Key
 - Root CA cert (encrypted and uploaded to GCS)

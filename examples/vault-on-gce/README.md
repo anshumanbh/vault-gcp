@@ -4,7 +4,7 @@
 
 ![architecture diagram](./diagram.png)
 
-## Set up the environment
+## Setup
 
 Create a VPC network “vault” and a subnet “vault-subnet” (From GCLOUD Console). Configure the following:
 ```
@@ -72,18 +72,32 @@ rm -rf .terraform/
 rm terraform.tfstate*
 ```
 
-## Terraform’ing will provision the following items:
+## Terraform’ing will provision the following items from the GCLOUD Cloud Shell:
 
-* TLS certificates for securing the Vault API
-* Service Account for Vault Compute Engine instance
+* TLS certificates and keys for securing the Vault API
+* Service Account for Vault Compute Engine instance with the appropriate scopes
+* Service Account key
 * IAM policy bindings that specify how Vault can interact with GCS, Cloud IAM, Cloud KMS
-* Vault instance template and startup script that are used to install Vault
-* Managed instance group for the instance template
+* Firewall rule to allow SSH in to the Vault server
 * GCS bucket as the Vault storage backend
 * GCS bucket for Vault assets like storing encrypted unseal keys, TLS certs & keys, root authentication token
-* Vault instance created
-* Unseal keys and the root token are stored encrypted (w/ KMS key) in GCS
-* gcp-credentials.json file is generated
+* Managed instance group for the instance template
+* Vault unseal keys, Vault root token, vault-admin SA key along with the TLS certs & keys are encrypted (w/ KMS key) and stored in GCS
+* Vault instance template and startup script that are used to install Vault. After provisioning the Google Compute Engine instance, the startup script is run that does the following:
+  * Updates the base OS of the instance
+  * Installs unzip, jq, netcat and nginx
+  * Downloads and Installs Vault binary
+  * Installs Stackdriver
+  * Setup Vault Config file
+  * Download Service Account key from GCS and decrypt it using KMS key
+  * Setup Vault env file
+  * Download TLS certs and keys from GCS and decrypt it using KMS key
+  * Setup vault to start as systemd service
+  * Export some Vault environment variables
+  * Enable health checks via NGINX. Restart NGINX.
+  * Initialize Vault
+  * Encrypt and store the unseal keys on GCS
+  * Remove the unseal keys locally
 
 
 ### NOTE: Terraform.tfstate contains sensitive information
@@ -225,15 +239,3 @@ Key     Value
 value   world
 ```
 
-## Cleaning up
-
-```
-terraform destroy
-```
-
-Clean up the locally generated artifacts:
-
-```
-rm -rf certs/
-rm vault_sa_key.json*
-```
