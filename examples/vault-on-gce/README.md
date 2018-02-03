@@ -21,13 +21,13 @@ Google Cloud Key Management Service (KMS) API
 Google Identity and Access Management (IAM) API
 ```
 
-Create a KMS keyring and a KMS key (From GCLOUD Cloud Shell)
+Create a KMS keyring and a KMS key (All commands should be executed from GCLOUD Cloud Shell from down here, unless stated otherwise)
 ```
 gcloud kms keyrings create vault --location global
 gcloud kms keys create vault-init --location global --keyring vault --purpose encryption
 ```
 
-Setting up google project (From GCLOUD Cloud Shell)
+Setting up google project
 ```
 gcloud config set project <project_id>
 export GOOGLE_PROJECT=$(gcloud config get-value project)
