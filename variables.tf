@@ -40,7 +40,6 @@ variable zone {
 
 variable machine_type {
   description = "The machine type for the instance"
-  default     = "n1-standard-1"
 }
 
 variable vault_version {

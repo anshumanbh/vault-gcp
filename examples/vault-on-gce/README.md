@@ -35,9 +35,16 @@ Add the project ID, bucket name and KeyRing name to the `terraform.tfvars` file:
 ```
 export GOOGLE_PROJECT=$(gcloud config get-value project)
 cat - > terraform.tfvars <<EOF
+network = "vault"
+subnetwork = "vault-subnet"
 project_id = "${GOOGLE_PROJECT}"
+region = "us-central1"
+zone = "us-central1-b"
+machine_type = "n1-standard-1"
 storage_bucket = "${GOOGLE_PROJECT}-vault"
+kms_key_name = "vault-init"
 kms_keyring_name = "vault"
+vault_version = "0.9.0"
 EOF
 ```
 

@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-variable region {
-  default = "us-central1"
-}
-
-variable zone {
-  default = "us-central1-b"
-}
-
+variable network {}
+variable subnetwork {}
 variable project_id {}
+variable region {}
+variable zone {}
+variable machine_type {}
 variable storage_bucket {}
+variable kms_key_name {}
 variable kms_keyring_name {}
+variable vault_version {}
 
 provider google {
   region = "${var.region}"
