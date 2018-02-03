@@ -184,7 +184,8 @@ Configure GCP backend:
 vault write auth/gcp/config credentials=@/etc/vault/gcp_credentials.json
 ```
 
-## Create a Vault role and login with signed JWT
+## Authenticating with Cloud IAM
+### Create a Vault role and login with signed JWT
 
 Create a Vault role named `dev-role`:
 
