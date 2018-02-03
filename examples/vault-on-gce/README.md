@@ -170,6 +170,11 @@ Authenticate to Vault as root:
 vault auth ROOT_TOKEN
 ```
 
+## Configure GCP Audit Backend
+```
+vault audit-enable syslog
+```
+
 ## Configure GCP Auth Backend
 
 Enable GCP auth backend:
