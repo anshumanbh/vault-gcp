@@ -2,7 +2,7 @@
 
 **Figure 1.** *diagram of Google Cloud resources*
 
-![architecture diagram](./diagram.png)
+![architecture diagram](./vaultgcp.png)
 
 ## Setup
 
@@ -125,7 +125,7 @@ export VAULT_CLIENT_CERT=/etc/vault/vault-server.crt.pem
 export VAULT_CLIENT_KEY=/etc/vault/vault-server.key.pem
 ```
 
-## Initialize Vault
+## Unsealing Vault
 
 Obtain the unseal keys from Cloud Storage and decrypt them using Cloud KMS:
 
