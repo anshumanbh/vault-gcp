@@ -33,11 +33,15 @@ provider google {
 module "vault" {
   // source               = "github.com/GoogleCloudPlatform/terraform-google-vault"
   source               = "../../"
+  network              = "${var.network}"
+  subnetwork           = "${var.subnetwork}"
   project_id           = "${var.project_id}"
   region               = "${var.region}"
   zone                 = "${var.zone}"
-  machine_type         = "n1-standard-4"
+  machine_type         = "${var.machine_type}"
   storage_bucket       = "${var.storage_bucket}"
+  kms_key_name         = "${var.kms_key_name}"
   kms_keyring_name     = "${var.kms_keyring_name}"
+  vault_version        = "${var.vault_version}"
   force_destroy_bucket = true
 }

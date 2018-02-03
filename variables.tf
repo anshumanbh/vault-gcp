@@ -24,12 +24,10 @@ variable storage_bucket {
 
 variable network {
   description = "The network to deploy to"
-  default     = "default"
 }
 
 variable subnetwork {
   description = "The subnetwork to deploy to"
-  default     = "default"
 }
 
 variable region {
@@ -47,7 +45,6 @@ variable machine_type {
 
 variable vault_version {
   description = "The version of vault to install."
-  default     = "0.9.0"
 }
 
 variable vault_args {
@@ -66,7 +63,6 @@ variable kms_keyring_name {
 
 variable kms_key_name {
   description = "The name of the Cloud KMS Key used for asset encryption/decryption"
-  default     = "vault-init"
 }
 
 variable tls_ca_subject {
