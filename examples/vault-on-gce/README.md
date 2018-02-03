@@ -4,58 +4,93 @@
 
 ![architecture diagram](./diagram.png)
 
-## Create the Cloud KMS KeyRing for asset encryption:
+## Set up the environment
 
-Cloud KMS is used to encrypt assets like the Vault unseal keys and TLS certificates so they can be securely stored in a Cloud Storage bucket.
+Create a VPC network “vault” and a subnet “vault-subnet” (From GCLOUD Console). Configure the following:
+```
+Region - us-central1
+IP range - 10.128.0.0/20
+Regional (can be global also)
+```
 
-Create the key ring and encryption key:
+Enable the following GCLOUD APIs (From GCLOUD Console)
+```
+Google Compute Engine API
+Google Cloud Storage
+Google Cloud Key Management Service (KMS) API
+Google Identity and Access Management (IAM) API
+```
 
+Create a KMS keyring and a KMS key (From GCLOUD Cloud Shell)
 ```
 gcloud kms keyrings create vault --location global
-
 gcloud kms keys create vault-init --location global --keyring vault --purpose encryption
 ```
 
-## Set up the environment
-
-Enable the following Google Cloud APIs before continuing:
-
-- Google Compute Engine API
-- Google Cloud Storage
-- Google Cloud Key Management Service (KMS) API
-- Google Identity and Access Management (IAM) API
-
+Setting up google project (From GCLOUD Cloud Shell)
 ```
-gcloud auth application-default login
+gcloud config set project <project_id>
 export GOOGLE_PROJECT=$(gcloud config get-value project)
+git clone https://github.com/anshumanbh/terraform-google-vault.git
+cd terraform-google-vault/examples/vault-on-gce
 ```
 
-Add the project ID, bucket name and KeyRing name to the `terraform.tfvars` file:
-
+Next, create “terraform.tfvars” file:
 ```
-export GOOGLE_PROJECT=$(gcloud config get-value project)
 cat - > terraform.tfvars <<EOF
-network = "vault"
-subnetwork = "vault-subnet"
-project_id = "${GOOGLE_PROJECT}"
-region = "us-central1"
-zone = "us-central1-b"
-machine_type = "n1-standard-1"
-storage_bucket = "${GOOGLE_PROJECT}-vault"
-kms_key_name = "vault-init"
-kms_keyring_name = "vault"
-vault_version = "0.9.0"
-EOF
+	network = "vault"
+	subnetwork = "vault-subnet"
+	project_id = "${GOOGLE_PROJECT}"
+	region = "us-central1"
+	zone = "us-central1-b"
+	machine_type = "n1-standard-1"
+	storage_bucket = "${GOOGLE_PROJECT}-vault"
+	kms_key_name = "vault-init"
+	kms_keyring_name = "vault"
+	vault_version = "0.9.0"
+	EOF
 ```
 
-## Deploy Vault
+If the cloud shell does not have terraform installed already, install it by:
+```
+curl -sL https://goo.gl/yZS5XU | bash
+source ${HOME}/.bashrc
+```
 
+Run Terraform
 ```
 terraform init
 terraform plan
-terraform apply
+terraform apply (You’d have to enter “yes” at some point)
 ```
 
+Destroying Terraform (only if you want to destroy the entire infrastructure)
+```
+terraform destroy
+rm -rf certs/
+rm -rf .terraform/
+rm terraform.tfstate*
+```
+
+## Terraform’ing will provision the following items:
+
+* TLS certificates for securing the Vault API
+* Service Account for Vault Compute Engine instance
+* IAM policy bindings that specify how Vault can interact with GCS, Cloud IAM, Cloud KMS
+* Vault instance template and startup script that are used to install Vault
+* Managed instance group for the instance template
+* GCS bucket as the Vault storage backend
+* GCS bucket for Vault assets like storing encrypted unseal keys, TLS certs & keys, root authentication token
+* Vault instance created
+* Unseal keys and the root token are stored encrypted (w/ KMS key) in GCS
+* gcp-credentials.json file is generated
+
+
+### NOTE: Terraform.tfstate contains sensitive information
+
+
+---------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------
 After a few minutes, the Vault instance will be ready.
 
 ## SSH Into Vault Instnace
