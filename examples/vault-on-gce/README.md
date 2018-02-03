@@ -1,7 +1,5 @@
 # Vault on GCE Example
 
-**Figure 1.** *diagram of Google Cloud resources*
-
 ![architecture diagram](./vaultgcp.png)
 
 ## Setup
